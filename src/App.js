@@ -70,7 +70,8 @@ export default function App() {
             if (!ethereum) {
                 toast.error(
                     <p style={{ color: "white" }}>
-                        Get MetaMask! Click{" "}
+                        Oops, we can't connect you. Please get MetaMask so we
+                        can connect you! Click{" "}
                         <a
                             style={{ color: "white" }}
                             href="https://metamask.io/faqs/"
