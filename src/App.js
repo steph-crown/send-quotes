@@ -6,6 +6,8 @@ import { ReactComponent as Sun } from "./assets/sun-solid.svg";
 import { ethers } from "ethers";
 import "./App.css";
 import abi from "./utils/WavePortal.json";
+import toast from "react-hot-toast";
+import { Notifications } from "./Notifications/Index";
 
 export default function App() {
     /*
@@ -14,6 +16,8 @@ export default function App() {
     const [currentAccount, setCurrentAccount] = React.useState("");
     const [allWaves, setAllWaves] = React.useState([]);
     const [message, setMessage] = React.useState("");
+    const [loading, setLoading] = React.useState(false);
+    const [fetching, setFetching] = React.useState(false);
     const contractAddress = "0xF9Ee871eAd2Af973EDFfC795cCCfDc14454bb659";
     const contractABI = abi.abi;
     const [mode, setMode] = React.useState(
@@ -48,6 +52,7 @@ export default function App() {
             }
         } catch (error) {
             console.log(error);
+            toast.error(error.message || "An error occured");
         }
     };
 
@@ -55,11 +60,14 @@ export default function App() {
      * Implement your connectWallet method here
      */
     const connectWallet = async () => {
+        setLoading(true);
+
         try {
             const { ethereum } = window;
 
             if (!ethereum) {
                 alert("Get MetaMask!");
+                setLoading(false);
                 return;
             }
 
@@ -70,8 +78,12 @@ export default function App() {
 
             console.log("Connected", accounts[0]);
             setCurrentAccount(accounts[0]);
+            setLoading(false);
         } catch (error) {
+            setLoading(false);
+
             console.log(error);
+            toast.error(error.message || "An error occured");
         }
     };
     /*
@@ -82,6 +94,8 @@ export default function App() {
     }, []);
 
     const getAllWaves = async () => {
+        setFetching(true);
+
         try {
             const { ethereum } = window;
             if (ethereum) {
@@ -95,11 +109,18 @@ export default function App() {
                 const allWaves = await contract.getListOfWavers();
 
                 setAllWaves(allWaves);
+                setFetching(false);
             } else {
                 console.log("No ethereum object found");
+                toast.error(
+                    "We can't find an account to use. Please connect to Metamask."
+                );
+                setFetching(false);
             }
         } catch (err) {
             console.log(err);
+            setFetching(false);
+            // toast.error(err.message || "An error occured");
         }
     };
 
@@ -108,6 +129,8 @@ export default function App() {
     }, []);
 
     const wave = async () => {
+        setLoading(true);
+
         try {
             const { ethereum } = window;
 
@@ -136,16 +159,26 @@ export default function App() {
                 // Get list of waves
                 const listOfWaves = await wavePortalContract.getListOfWavers();
                 console.log("List of wavers are", listOfWaves);
+                setLoading(false);
             } else {
                 console.log("Ethereum object doesn't exist!");
+                toast.error(
+                    "We can't find an account to use. Please connect to Metamask."
+                );
+                setLoading(false);
             }
         } catch (error) {
             console.log(error);
+            toast.error(
+                "We can't find an account to use. Please connect to Metamask."
+            );
+            setLoading(false);
         }
     };
 
     return (
         <div className={"main " + mode}>
+            <Notifications />
             <section className="avatar">
                 {" "}
                 <Avatar />
@@ -203,8 +236,12 @@ export default function App() {
                         }}
                     />
 
-                    <button className="waveButton" onClick={wave}>
-                        Send quote
+                    <button
+                        className="waveButton"
+                        onClick={wave}
+                        disabled={loading}
+                    >
+                        {loading ? "Processing ..." : "Send quote"}
                     </button>
                     {/*
                      * If there is no currentAccount render this button
@@ -213,8 +250,9 @@ export default function App() {
                         <button
                             className="waveButton connect"
                             onClick={connectWallet}
+                            disabled={loading}
                         >
-                            Connect Wallet
+                            {loading ? "Processing ..." : "Connect Wallet"}
                         </button>
                     )}
                     {console.log(allWaves)}
