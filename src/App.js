@@ -18,6 +18,8 @@ export default function App() {
     const [message, setMessage] = React.useState("");
     const [loading, setLoading] = React.useState(false);
     const [fetching, setFetching] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
+    const [noMessage, setNoMessage] = React.useState(false);
     const contractAddress = "0xF9Ee871eAd2Af973EDFfC795cCCfDc14454bb659";
     const contractABI = abi.abi;
     const [mode, setMode] = React.useState(
@@ -66,7 +68,14 @@ export default function App() {
             const { ethereum } = window;
 
             if (!ethereum) {
-                alert("Get MetaMask!");
+                toast.error(
+                    <p style={{ color: "white" }}>
+                        Get MetaMask! Click{" "}
+                        <a href="https://metamask.io/faqs/">
+                            https://metamask.io/faqs/
+                        </a>
+                    </p>
+                );
                 setLoading(false);
                 return;
             }
@@ -129,50 +138,71 @@ export default function App() {
     }, []);
 
     const wave = async () => {
-        setLoading(true);
+        if (message) {
+            setLoading(true);
+            setSuccess(false);
+            try {
+                const { ethereum } = window;
 
-        try {
-            const { ethereum } = window;
+                if (ethereum) {
+                    const provider = new ethers.providers.Web3Provider(
+                        ethereum
+                    );
+                    const signer = provider.getSigner();
+                    const wavePortalContract = new ethers.Contract(
+                        contractAddress,
+                        contractABI,
+                        signer
+                    );
 
-            if (ethereum) {
-                const provider = new ethers.providers.Web3Provider(ethereum);
-                const signer = provider.getSigner();
-                const wavePortalContract = new ethers.Contract(
-                    contractAddress,
-                    contractABI,
-                    signer
-                );
+                    /*
+                     * Execute the actual wave from your smart contract
+                     */
+                    const waveTxn = await wavePortalContract.wave(message);
+                    console.log("Mining...", waveTxn.hash);
 
-                /*
-                 * Execute the actual wave from your smart contract
-                 */
-                const waveTxn = await wavePortalContract.wave(message);
-                console.log("Mining...", waveTxn.hash);
+                    await waveTxn.wait();
+                    console.log("Mined -- ", waveTxn.hash);
 
-                await waveTxn.wait();
-                console.log("Mined -- ", waveTxn.hash);
+                    // Get total waves
+                    let count = await wavePortalContract.getTotalWaves();
+                    console.log(
+                        "Retrieved total wave count...",
+                        count.toNumber()
+                    );
 
-                // Get total waves
-                let count = await wavePortalContract.getTotalWaves();
-                console.log("Retrieved total wave count...", count.toNumber());
-
-                // Get list of waves
-                const listOfWaves = await wavePortalContract.getListOfWavers();
-                console.log("List of wavers are", listOfWaves);
-                setLoading(false);
-            } else {
-                console.log("Ethereum object doesn't exist!");
+                    // Get list of waves
+                    const listOfWaves =
+                        await wavePortalContract.getListOfWavers();
+                    console.log("List of wavers are", listOfWaves);
+                    setLoading(false);
+                    setSuccess(true);
+                    toast.success(
+                        <p style={{ color: "white" }}>
+                            You sent a message! Steph Crown says Hi. You can
+                            connect{" "}
+                            <a href="https://twitter.com/stephcrown06">here</a>
+                        </p>,
+                        {
+                            duration: 15000,
+                        }
+                    );
+                } else {
+                    console.log("Ethereum object doesn't exist!");
+                    toast.error(
+                        "We can't find an account to use. Please connect to Metamask."
+                    );
+                    setLoading(false);
+                }
+            } catch (error) {
+                console.log(error);
                 toast.error(
-                    "We can't find an account to use. Please connect to Metamask."
+                    error.message || "An error occured. Please try again"
                 );
                 setLoading(false);
             }
-        } catch (error) {
-            console.log(error);
-            toast.error(
-                "We can't find an account to use. Please connect to Metamask."
-            );
-            setLoading(false);
+        } else {
+            setNoMessage(true);
         }
     };
 
@@ -232,9 +262,11 @@ export default function App() {
                     <textarea
                         value={message}
                         onChange={(ev) => {
+                            setNoMessage(false);
                             setMessage(ev.target.value);
                         }}
                     />
+                    {noMessage && <small>Please input a message</small>}
 
                     <button
                         className="waveButton"
@@ -256,6 +288,16 @@ export default function App() {
                         </button>
                     )}
                     {console.log(allWaves)}
+                </section>{" "}
+                <section className="allWaves">
+                    {allWaves &&
+                        allWaves.map(({ from, message, timeStamp }) => (
+                            <div>
+                                <p>{from}</p>
+                                <p>{message}</p>
+                                <p>{timeStamp}</p>
+                            </div>
+                        ))}
                 </section>
             </section>
         </div>

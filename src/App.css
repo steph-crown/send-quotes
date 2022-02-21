@@ -78,6 +78,10 @@ button {
     color: white;
 }
 
+.waveButton:disabled {
+    background: #999 !important;
+}
+
 .connect {
     color: var(--main-color);
     background: #eeedf7;
@@ -117,6 +121,10 @@ button:hover {
     /* border: 1px solid #dedbf0; */
     background: #f5f4fa;
     border-radius: 5px;
+}
+
+small {
+    color: rgb(192, 86, 86);
 }
 
 .changeMode svg {
