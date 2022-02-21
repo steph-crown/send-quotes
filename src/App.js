@@ -13,6 +13,9 @@ export default function App() {
     const [message, setMessage] = React.useState("");
     const contractAddress = "0xF9Ee871eAd2Af973EDFfC795cCCfDc14454bb659";
     const contractABI = abi.abi;
+    const [mode, setMode] = React.useState(
+        localStorage.getItem("mode") || "light"
+    );
 
     const checkIfWalletIsConnected = async () => {
         try {
@@ -148,7 +151,7 @@ export default function App() {
                 <section className="dataContainer">
                     <header className="header">
                         <h1>
-                            Say something nice to <span>Steph Crown</span>
+                            Hey there, it is <span>Steph Crown</span>
                         </h1>
                     </header>
 
@@ -172,8 +175,9 @@ export default function App() {
                             .
                         </p>{" "}
                         <p>
-                            Sometimes, I get frustrated while coding, send me a
-                            quote to keep me going!
+                            This is a basic app that interacts with a smart
+                            contract I created. Say something nice in the box
+                            and hit the button!
                         </p>
                     </main>
 

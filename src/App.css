@@ -85,3 +85,7 @@ a {
 .avatar svg {
     margin-left: -14px;
 }
+
+button:hover {
+    background: #473d8f;
+}
