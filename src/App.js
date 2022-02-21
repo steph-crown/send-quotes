@@ -20,7 +20,7 @@ export default function App() {
     const [fetching, setFetching] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
     const [noMessage, setNoMessage] = React.useState(false);
-    const contractAddress = "0xF9Ee871eAd2Af973EDFfC795cCCfDc14454bb659";
+    const contractAddress = "0xE3F8c6B83EB37416B4E1a4d358d87C8Ef6c5e7Ed";
     const contractABI = abi.abi;
     const [mode, setMode] = React.useState(
         localStorage.getItem("mode") || "light"
@@ -91,6 +91,7 @@ export default function App() {
             console.log("Connected", accounts[0]);
             setCurrentAccount(accounts[0]);
             setLoading(false);
+            toast.success("Successfully connected MetaMask!");
         } catch (error) {
             setLoading(false);
 
@@ -120,7 +121,15 @@ export default function App() {
                 );
                 const allWaves = await contract.getListOfWavers();
 
-                setAllWaves(allWaves);
+                setAllWaves(
+                    allWaves
+                        .map(({ from, timestamp, message }) => ({
+                            address: from,
+                            timestamp: new Date(timestamp * 1000),
+                            message: message,
+                        }))
+                        .reverse()
+                );
                 setFetching(false);
             } else {
                 console.log("No ethereum object found");
@@ -161,40 +170,28 @@ export default function App() {
                     /*
                      * Execute the actual wave from your smart contract
                      */
-                    const waveTxn = await wavePortalContract.wave(message);
+                    const waveTxn = await wavePortalContract.wave(message, {
+                        gasLimit: 300000,
+                    });
                     console.log("Mining...", waveTxn.hash);
 
                     await waveTxn.wait();
                     console.log("Mined -- ", waveTxn.hash);
 
-                    // Get total waves
-                    let count = await wavePortalContract.getTotalWaves();
-                    console.log(
-                        "Retrieved total wave count...",
-                        count.toNumber()
-                    );
-
-                    // Get list of waves
-                    const listOfWaves =
-                        await wavePortalContract.getListOfWavers();
-                    console.log("List of wavers are", listOfWaves);
                     setLoading(false);
                     setSuccess(true);
                     toast.success(
                         <p style={{ color: "white" }}>
-                            You sent a message! Steph Crown says Hi. You can
-                            connect{" "}
-                            <a
-                                style={{ color: "white" }}
-                                href="https://twitter.com/stephcrown06"
-                            >
-                                here
-                            </a>
+                            You sent a message, and it was nice!{" "}
+                            <span role="img" aria-labelledby="smile">
+                                😊
+                            </span>{" "}
                         </p>,
                         {
-                            duration: 15000,
+                            duration: 6000,
                         }
                     );
+                    setMessage("");
                 } else {
                     console.log("Ethereum object doesn't exist!");
                     toast.error(
@@ -205,7 +202,7 @@ export default function App() {
             } catch (error) {
                 console.log(error);
                 toast.error(
-                    error.message || "An error occured. Please try again"
+                    "An error occured. Please first connect to Metamask. Click on Connect Wallet"
                 );
                 setLoading(false);
             }
@@ -213,6 +210,42 @@ export default function App() {
             setNoMessage(true);
         }
     };
+
+    /**
+     * Listen in for emitter events!
+     */
+    React.useEffect(() => {
+        let wavePortalContract;
+
+        const onNewWave = (from, timestamp, message) => {
+            setAllWaves((prevState) => [
+                {
+                    address: from,
+                    timestamp: new Date(timestamp * 1000),
+                    message: message,
+                },
+                ...prevState,
+            ]);
+        };
+
+        if (window.ethereum) {
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+
+            wavePortalContract = new ethers.Contract(
+                contractAddress,
+                contractABI,
+                signer
+            );
+            wavePortalContract.on("NewWave", onNewWave);
+        }
+
+        return () => {
+            if (wavePortalContract) {
+                wavePortalContract.off("NewWave", onNewWave);
+            }
+        };
+    }, []);
 
     return (
         <div className={"main " + mode}>
@@ -273,6 +306,7 @@ export default function App() {
                             setNoMessage(false);
                             setMessage(ev.target.value);
                         }}
+                        disabled={loading}
                     />
                     {noMessage && <small>Please input a message</small>}
 
@@ -281,7 +315,7 @@ export default function App() {
                         onClick={wave}
                         disabled={loading}
                     >
-                        {loading ? "Processing ..." : "Send Quote"}
+                        {loading ? "Processing ..." : "Say Something"}
                     </button>
                     {/*
                      * If there is no currentAccount render this button
@@ -295,15 +329,30 @@ export default function App() {
                             {loading ? "Processing ..." : "Connect Wallet"}
                         </button>
                     )}
-                    {console.log(allWaves)}
                 </section>{" "}
                 <section className="allWaves">
+                    <h2>Previous messages</h2>
+                    {fetching && <p>Fetching previous messages</p>}
+                    {!fetching && allWaves.length === 0 && (
+                        <p>No previous messages</p>
+                    )}
                     {allWaves &&
-                        allWaves.map(({ from, message, timeStamp }) => (
-                            <div>
-                                <p>{from}</p>
-                                <p>{message}</p>
-                                <p>{timeStamp}</p>
+                        allWaves.map(({ address, message, timestamp }) => (
+                            <div className="wave">
+                                <p className="wave__content">
+                                    {" "}
+                                    A kind person with the address:{" "}
+                                    <span>{address}</span> said "
+                                    <span className="wave__message">
+                                        {message}
+                                    </span>
+                                    " at{" "}
+                                    <span>
+                                        {timestamp.toDateString() +
+                                            " " +
+                                            timestamp.toLocaleTimeString()}
+                                    </span>
+                                </p>
                             </div>
                         ))}
                 </section>

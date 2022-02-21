@@ -17,7 +17,8 @@ h1 span {
     color: var(--main-color);
 }
 
-.dataContainer {
+.dataContainer,
+.allWaves {
     max-width: 700px;
     margin: 0 auto;
     width: 100%;
@@ -130,6 +131,22 @@ small {
     color: rgb(192, 86, 86);
 }
 
+.allWaves {
+    margin-top: 2em;
+    /* width: 100%; */
+}
+
+.wave {
+    background: #f5f4fa;
+    border-radius: 5px;
+    padding: 8px;
+    margin-bottom: 1em;
+}
+
+.wave span {
+    color: var(--main-color);
+}
+
 .changeMode svg {
     height: 16px;
     fill: #2c3e50;
@@ -145,10 +162,14 @@ small {
     color: #ccc;
 }
 
-.dark h1 {
+.dark h1,
+.dark h2 {
     color: #efefef;
 }
 
+.dark .wave {
+    background: #181718;
+}
 .dark textarea {
     /* background: #1b2631; */
     /* border-color: #121a21; */
