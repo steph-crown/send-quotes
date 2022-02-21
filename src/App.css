@@ -1,0 +1,87 @@
+:root {
+    --main-color: #6054b6;
+}
+h1 {
+    fontweight: 800;
+    font-size: 2.5em;
+    line-height: 110%;
+    margin-bottom: 20px;
+}
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em;
+    }
+}
+h1 span {
+    color: var(--main-color);
+}
+
+.dataContainer {
+    max-width: 700px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.mainContainer {
+    min-height: 550px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1em calc(0.05 * 100vw);
+}
+
+p {
+    color: #898989;
+    margin: 0.7em 0;
+    font-size: 1em;
+}
+::-moz-selection {
+    /* Code for Firefox */
+    color: white;
+    background: var(--main-color);
+}
+
+::selection {
+    color: white;
+    background: var(--main-color);
+}
+
+textarea,
+button {
+    width: 100%;
+    outline: none;
+    padding: 12px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+textarea {
+    border: 1px solid #ddd;
+    color: #898989;
+    padding: 20px;
+    margin-top: 1.5em;
+    height: 100px;
+    font-size: 1em;
+}
+button {
+    border: none;
+    background: var(--main-color);
+    color: white;
+    margin-top: 0.8em;
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+    color: var(--main-color);
+}
+
+.avatar {
+    padding: 1em calc(0.05 * 100vw);
+    padding-bottom: 0;
+}
+
+.avatar svg {
+    margin-left: -14px;
+}
