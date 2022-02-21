@@ -93,6 +93,7 @@ export default function App() {
             setCurrentAccount(accounts[0]);
             setLoading(false);
             toast.success("Successfully connected MetaMask!");
+            getAllWaves();
         } catch (error) {
             setLoading(false);
 
