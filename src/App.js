@@ -71,7 +71,10 @@ export default function App() {
                 toast.error(
                     <p style={{ color: "white" }}>
                         Get MetaMask! Click{" "}
-                        <a href="https://metamask.io/faqs/">
+                        <a
+                            style={{ color: "white" }}
+                            href="https://metamask.io/faqs/"
+                        >
                             https://metamask.io/faqs/
                         </a>
                     </p>
@@ -181,7 +184,12 @@ export default function App() {
                         <p style={{ color: "white" }}>
                             You sent a message! Steph Crown says Hi. You can
                             connect{" "}
-                            <a href="https://twitter.com/stephcrown06">here</a>
+                            <a
+                                style={{ color: "white" }}
+                                href="https://twitter.com/stephcrown06"
+                            >
+                                here
+                            </a>
                         </p>,
                         {
                             duration: 15000,
