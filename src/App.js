@@ -153,6 +153,10 @@ export default function App() {
                     className="changeMode"
                     onClick={() => {
                         setMode(mode === "light" ? "dark" : "light");
+                        localStorage.setItem(
+                            "mode",
+                            mode === "light" ? "dark" : "light"
+                        );
                     }}
                 >
                     {mode === "dark" ? <Sun /> : <Moon />}
@@ -206,7 +210,10 @@ export default function App() {
                      * If there is no currentAccount render this button
                      */}
                     {!currentAccount && (
-                        <button className="waveButton" onClick={connectWallet}>
+                        <button
+                            className="waveButton connect"
+                            onClick={connectWallet}
+                        >
                             Connect Wallet
                         </button>
                     )}

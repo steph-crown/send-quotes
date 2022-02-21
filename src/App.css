@@ -1,5 +1,6 @@
 :root {
     --main-color: #6054b6;
+    --dark-main: #8b82ca;
 }
 h1 {
     fontweight: 800;
@@ -77,6 +78,14 @@ button {
     color: white;
 }
 
+.connect {
+    color: var(--main-color);
+    background: #eeedf7;
+}
+
+.connect:hover {
+    color: white;
+}
 a {
     text-decoration: none;
     color: var(--main-color);
@@ -111,12 +120,50 @@ button:hover {
 
 .changeMode svg {
     height: 16px;
-    fill: var(--main-color);
+    fill: #2c3e50;
 }
 
 .changeMode:hover svg {
     fill: white;
 }
 
-.dark {
+/* dark mode */
+
+.dark p {
+    color: #ccc;
+}
+
+.dark h1 {
+    color: #efefef;
+}
+
+.dark textarea {
+    background: #1b2631;
+    border-color: #121a21;
+    color: #bbb;
+}
+
+.dark .changeMode {
+    background: #1b2631;
+}
+
+.dark h1 span,
+.dark a {
+    color: var(--dark-main);
+}
+
+.dark .waveButton {
+    background: var(--dark-main);
+}
+.dark .waveButton:hover {
+    background: #473d8f;
+}
+
+.dark .changeMode svg {
+    fill: #fff;
+}
+
+.dark .connect {
+    background: transparent;
+    color: #fff;
 }
