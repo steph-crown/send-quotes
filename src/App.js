@@ -272,7 +272,7 @@ export default function App() {
                 <section className="dataContainer">
                     <header className="header">
                         <h1>
-                            Hey there, it is <span>Steph Crown</span>
+                            Say something to <span>Steph Crown</span>
                         </h1>
                     </header>
 
