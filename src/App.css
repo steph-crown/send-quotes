@@ -48,7 +48,7 @@ p {
 }
 
 textarea,
-button {
+.waveButton {
     width: 100%;
     outline: none;
     padding: 12px;
@@ -66,10 +66,15 @@ textarea {
 }
 button {
     border: none;
+    cursor: pointer;
+    outline: none;
+}
+
+.waveButton {
+    margin-top: 0.8em;
+
     background: var(--main-color);
     color: white;
-    margin-top: 0.8em;
-    cursor: pointer;
 }
 
 a {
@@ -80,12 +85,38 @@ a {
 .avatar {
     padding: 1em calc(0.05 * 100vw);
     padding-bottom: 0;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
-.avatar svg {
+.avatar > svg {
     margin-left: -14px;
 }
 
 button:hover {
     background: #473d8f;
+}
+
+.changeMode {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* border: 1px solid #dedbf0; */
+    background: #f5f4fa;
+    border-radius: 5px;
+}
+
+.changeMode svg {
+    height: 16px;
+    fill: var(--main-color);
+}
+
+.changeMode:hover svg {
+    fill: white;
+}
+
+.dark {
 }

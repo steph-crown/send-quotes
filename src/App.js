@@ -1,5 +1,8 @@
 import * as React from "react";
 import { ReactComponent as Avatar } from "./assets/avatar.svg";
+import { ReactComponent as Moon } from "./assets/moon-solid.svg";
+import { ReactComponent as Sun } from "./assets/sun-solid.svg";
+
 import { ethers } from "ethers";
 import "./App.css";
 import abi from "./utils/WavePortal.json";
@@ -142,10 +145,18 @@ export default function App() {
     };
 
     return (
-        <div className="main">
+        <div className={"main " + mode}>
             <section className="avatar">
                 {" "}
                 <Avatar />
+                <button
+                    className="changeMode"
+                    onClick={() => {
+                        setMode(mode === "light" ? "dark" : "light");
+                    }}
+                >
+                    {mode === "dark" ? <Sun /> : <Moon />}
+                </button>
             </section>
             <section className="mainContainer">
                 <section className="dataContainer">

@@ -1,6 +1,11 @@
 * {
-    box-shadow: border-box;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
     font-family: "Hind", sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
+.dark {
+    background-color: #2c3e50;
 }
