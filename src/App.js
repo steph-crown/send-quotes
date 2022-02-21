@@ -190,7 +190,7 @@ export default function App() {
                 } else {
                     console.log("Ethereum object doesn't exist!");
                     toast.error(
-                        "We can't find an account to use. Please connect to Metamask."
+                        "We can't find an account to use. Please click on Connect Wallet."
                     );
                     setLoading(false);
                 }
@@ -273,7 +273,7 @@ export default function App() {
                         onClick={wave}
                         disabled={loading}
                     >
-                        {loading ? "Processing ..." : "Send quote"}
+                        {loading ? "Processing ..." : "Send Quote"}
                     </button>
                     {/*
                      * If there is no currentAccount render this button
