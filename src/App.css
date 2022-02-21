@@ -65,6 +65,9 @@ textarea {
     height: 100px;
     font-size: 1em;
 }
+textarea {
+    background: transparent;
+}
 button {
     border: none;
     cursor: pointer;
@@ -147,15 +150,16 @@ small {
 }
 
 .dark textarea {
-    background: #1b2631;
-    border-color: #121a21;
+    /* background: #1b2631; */
+    /* border-color: #121a21; */
     color: #bbb;
+    border-color: #242424;
 }
 
 .dark .changeMode {
     background: #1b2631;
 }
-
+/* 
 .dark h1 span,
 .dark a {
     color: var(--dark-main);
@@ -166,7 +170,7 @@ small {
 }
 .dark .waveButton:hover {
     background: #473d8f;
-}
+} */
 
 .dark .changeMode svg {
     fill: #fff;
