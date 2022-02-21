@@ -54,7 +54,7 @@ export default function App() {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.message || "An error occured");
+            toast.error("No authorized account found");
         }
     };
 
